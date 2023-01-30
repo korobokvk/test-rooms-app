@@ -1,10 +1,9 @@
 import { SuperTest, Test, Response } from 'supertest';
 
-import User, { UserRoles } from '@src/models/User';
+import User, { IUser } from '@src/models/User';
 import UserRepo from '@src/repos/UserRepo';
 import PwdUtil from '@src/util/PwdUtil';
 import FullPaths from '@src/routes/constants/FullPaths';
-
 
 // **** Variables **** //
 
@@ -13,7 +12,6 @@ const LoginCreds = {
   password: 'Password@1',
 } as const;
 
-
 // **** Functions **** //
 
 /**
@@ -21,9 +19,8 @@ const LoginCreds = {
  */
 function login(beforeAgent: SuperTest<Test>, done: (arg: string) => void) {
   // Setup dummy data
-  const role = UserRoles.Admin,
-    pwdHash = PwdUtil.hashSync(LoginCreds.password),
-    loginUser = User.new('john smith', LoginCreds.email, role, pwdHash);
+  const pwdHash = PwdUtil.hashSync(LoginCreds.password);
+  const loginUser: IUser = User.new('john smith', LoginCreds.email, pwdHash);
   // Add spy
   spyOn(UserRepo, 'getOne').and.resolveTo(loginUser);
   // Call Login API
@@ -36,7 +33,6 @@ function login(beforeAgent: SuperTest<Test>, done: (arg: string) => void) {
       return done(cookie);
     });
 }
-
 
 // **** Export default **** //
 

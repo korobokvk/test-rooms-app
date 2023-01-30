@@ -1,10 +1,7 @@
 import HttpStatusCodes from '@src/constants/HttpStatusCodes';
 
 import AuthService from '@src/services/AuthService';
-import EnvVars from '@src/constants/EnvVars';
 import { IReq, IRes } from './types/express/misc';
-
-
 
 // **** Types **** //
 
@@ -13,9 +10,24 @@ interface ILoginReq {
   password: string;
 }
 
+interface ICreateUser {
+  email: string;
+  password: string;
+  reEnteredPassword: string;
+}
 
 // **** Functions **** //
 
+/**
+ * Create user
+ */
+async function createUser(req: IReq<ICreateUser>, res: IRes) {
+  const { email, password, reEnteredPassword } = req.body;
+
+  if (password !== reEnteredPassword) {
+    return res.status(HttpStatusCodes.BAD_REQUEST).end();
+  }
+}
 /**
  * Login a user.
  */
@@ -23,8 +35,9 @@ async function login(req: IReq<ILoginReq>, res: IRes) {
   const { email, password } = req.body;
   // Add jwt to cookie
   const jwt = await AuthService.getJwt(email, password);
-  const { Key, Options } = EnvVars.CookieProps;
-  res.cookie(Key, jwt, Options);
+  res.send({
+    authToken: jwt,
+  });
   // Return
   return res.status(HttpStatusCodes.OK).end();
 }
@@ -33,11 +46,8 @@ async function login(req: IReq<ILoginReq>, res: IRes) {
  * Logout the user.
  */
 function logout(_: IReq, res: IRes) {
-  const { Key, Options } = EnvVars.CookieProps;
-  res.clearCookie(Key, Options);
   return res.status(HttpStatusCodes.OK).end();
 }
-
 
 // **** Export default **** //
 

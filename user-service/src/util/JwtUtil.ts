@@ -1,7 +1,6 @@
 import jsonwebtoken from 'jsonwebtoken';
 import EnvVars from '../constants/EnvVars';
 
-
 // **** Variables **** //
 
 // Errors
@@ -13,7 +12,6 @@ const Errors = {
 const Options = {
   expiresIn: EnvVars.Jwt.Exp,
 };
-
 
 // **** Functions **** //
 
@@ -38,7 +36,6 @@ function decode<T>(jwt: string): Promise<string | undefined | T> {
     });
   });
 }
-
 
 // **** Export default **** //
 

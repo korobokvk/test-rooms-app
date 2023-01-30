@@ -1,6 +1,6 @@
 body {
   padding: 100px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
 }
 
 body .users-column {
@@ -14,7 +14,6 @@ body .users-column .column-header {
   font-weight: 700;
   font-size: 1.2em;
 }
-
 
 /** Add User Column **/
 
@@ -32,7 +31,6 @@ body .add-user-col #logout-btn {
   margin-bottom: 10px;
   font-size: 15px;
 }
-
 
 /** Users Display Column **/
 

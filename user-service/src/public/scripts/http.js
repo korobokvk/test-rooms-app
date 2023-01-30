@@ -5,7 +5,7 @@ var Http = (() => {
       dataType: 'json',
       method: verb,
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     };

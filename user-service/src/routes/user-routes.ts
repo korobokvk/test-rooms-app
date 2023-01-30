@@ -4,12 +4,9 @@ import userService from '@src/services/UserService';
 import { IUser } from '@src/models/User';
 import { IReq, IRes } from './types/types';
 
-
 // **** Variables **** //
 
 // Paths
-
-
 
 // **** Functions **** //
 
@@ -24,7 +21,7 @@ async function getAll(_: IReq, res: IRes) {
 /**
  * Add one user.
  */
-async function add(req: IReq<{user: IUser}>, res: IRes) {
+async function add(req: IReq<{ user: IUser }>, res: IRes) {
   const { user } = req.body;
   await userService.addOne(user);
   return res.status(HttpStatusCodes.CREATED).end();
@@ -33,7 +30,7 @@ async function add(req: IReq<{user: IUser}>, res: IRes) {
 /**
  * Update one user.
  */
-async function update(req: IReq<{user: IUser}>, res: IRes) {
+async function update(req: IReq<{ user: IUser }>, res: IRes) {
   const { user } = req.body;
   await userService.updateOne(user);
   return res.status(HttpStatusCodes.OK).end();
@@ -47,7 +44,6 @@ async function _delete(req: IReq, res: IRes) {
   await userService.delete(id);
   return res.status(HttpStatusCodes.OK).end();
 }
-
 
 // **** Export default **** //
 

@@ -4,7 +4,6 @@
 
 import { Immutable } from '@src/other/types';
 
-
 const Paths = {
   Base: '/api',
   Auth: {
@@ -20,7 +19,6 @@ const Paths = {
     Delete: '/delete/:id',
   },
 };
-
 
 // **** Export **** //
 
