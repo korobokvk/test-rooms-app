@@ -21,7 +21,7 @@ interface ICreateUser {
 /**
  * Create user
  */
-async function createUser(req: IReq<ICreateUser>, res: IRes) {
+function createUser(req: IReq<ICreateUser>, res: IRes) {
   const { email, password, reEnteredPassword } = req.body;
 
   if (password !== reEnteredPassword) {
@@ -54,4 +54,5 @@ function logout(_: IReq, res: IRes) {
 export default {
   login,
   logout,
+  createUser,
 } as const;
