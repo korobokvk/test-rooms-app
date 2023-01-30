@@ -7,8 +7,6 @@ import { IReq, IRes } from './types/types';
 
 // **** Variables **** //
 
-// Paths
-
 
 
 // **** Functions **** //

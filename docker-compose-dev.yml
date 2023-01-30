@@ -1,15 +1,5 @@
 version: '3.8'
 services:
-  room-service:
-    build:
-      context: ./room-service/
-    ports:
-      - 8082:8081
-  user-service:
-    build: 
-      context: ./user-service/
-    ports:
-      - 8081:8081
   db-room:
     image: postgres:14.1-alpine
     restart: always
