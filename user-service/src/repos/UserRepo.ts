@@ -1,7 +1,6 @@
 import { IUser } from '@src/models/User';
 import orm from './MockOrm';
 import { UserModel } from '../models';
-import logger from 'jet-logger';
 import { Model } from 'sequelize';
 
 // **** Functions **** //

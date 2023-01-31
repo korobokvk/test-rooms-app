@@ -3,16 +3,10 @@ import HttpStatusCodes from '@src/constants/HttpStatusCodes';
 import UserService from '@src/services/UserService';
 import { IUser } from '@src/models/User';
 import { IReq, IRes } from './types/express/misc';
+import PwdUtil from '@src/util/PwdUtil';
+import logger from 'jet-logger';
 
 // **** Functions **** //
-
-/**
- * Get all users.
- */
-async function getAll(_: IReq, res: IRes) {
-  const users = await UserService.getAll();
-  return res.status(HttpStatusCodes.OK).json({ users });
-}
 
 /**
  * Add one user.
@@ -33,19 +27,24 @@ async function update(req: IReq<{ user: IUser }>, res: IRes) {
 }
 
 /**
- * Delete one user.
+ * Get user status
  */
-async function delete_(req: IReq, res: IRes) {
-  const id = +req.params.id;
-  await UserService.delete(id);
-  return res.status(HttpStatusCodes.OK).end();
+async function getStatus(req: IReq<{ data: NodeJS.ArrayBufferView }>, res: IRes) {
+  const body = req.body.data;
+  const decryptedData = PwdUtil.decryptData(body).toString();
+  const decryptedObject = JSON.parse(decryptedData) as IUser;
+
+  logger.info(decryptedObject);
+
+  const userObject = await UserService.getOne(decryptedObject.email);
+
+  return res.status(HttpStatusCodes.ACCEPTED).send(userObject).end();
 }
 
 // **** Export default **** //
 
 export default {
-  getAll,
   add,
   update,
-  delete: delete_,
+  getStatus,
 } as const;

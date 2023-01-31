@@ -21,9 +21,6 @@ authRouter.post(Paths.Auth.Create, validate('email', 'password', 'reEnteredPassw
 // Login user
 authRouter.post(Paths.Auth.Login, validate('email', 'password'), AuthRoutes.login);
 
-// Logout user
-authRouter.get(Paths.Auth.Logout, AuthRoutes.logout);
-
 // Add AuthRouter
 apiRouter.use(Paths.Auth.Base, authRouter);
 
@@ -31,17 +28,11 @@ apiRouter.use(Paths.Auth.Base, authRouter);
 
 const userRouter = Router();
 
-// Get all users
-userRouter.get(Paths.Users.Get, UserRoutes.getAll);
-
-// Add one user
-userRouter.post(Paths.Users.Add, validate(['user', User.instanceOf]), UserRoutes.add);
-
 // Update one user
 userRouter.put(Paths.Users.Update, validate(['user', User.instanceOf]), UserRoutes.update);
 
-// Delete one user
-userRouter.delete(Paths.Users.Delete, validate(['id', 'number', 'params']), UserRoutes.delete);
+// Get status
+apiRouter.use(Paths.Users.GetStatus, UserRoutes.getStatus);
 
 // Add UserRouter
 apiRouter.use(Paths.Users.Base, userRouter);

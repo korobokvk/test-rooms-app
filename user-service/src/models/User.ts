@@ -37,6 +37,8 @@ export const UserModel = (sequelize: Sequelize) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
+      primaryKey: true,
     },
     name: {
       type: DataTypes.STRING,

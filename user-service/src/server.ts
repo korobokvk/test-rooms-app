@@ -6,8 +6,6 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import logger from 'jet-logger';
 import express, { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import fs from 'fs-extra';
 
 import 'express-async-errors';
 

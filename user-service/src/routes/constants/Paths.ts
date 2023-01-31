@@ -10,14 +10,11 @@ const Paths = {
     Base: '/auth',
     Create: '/signup',
     Login: '/login',
-    Logout: '/logout',
   },
   Users: {
     Base: '/users',
-    Get: '/all',
-    Add: '/add',
     Update: '/update',
-    Delete: '/delete/:id',
+    GetStatus: '/get-status',
   },
 };
 

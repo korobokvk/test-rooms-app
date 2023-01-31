@@ -51,17 +51,9 @@ async function login(req: IReq<ILoginReq>, res: IRes) {
   return res.status(HttpStatusCodes.OK).end();
 }
 
-/**
- * Logout the user.
- */
-function logout(_: IReq, res: IRes) {
-  return res.status(HttpStatusCodes.OK).end();
-}
-
 // **** Export default **** //
 
 export default {
   login,
-  logout,
   createUser,
 } as const;
