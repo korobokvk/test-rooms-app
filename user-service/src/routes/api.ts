@@ -15,6 +15,9 @@ const apiRouter = Router(),
 
 const authRouter = Router();
 
+// Create user
+authRouter.post(Paths.Auth.Create, validate('email', 'password', 'reEnteredPassword'), AuthRoutes.createUser);
+
 // Login user
 authRouter.post(Paths.Auth.Login, validate('email', 'password'), AuthRoutes.login);
 

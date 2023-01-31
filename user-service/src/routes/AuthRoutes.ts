@@ -1,6 +1,9 @@
 import HttpStatusCodes from '@src/constants/HttpStatusCodes';
+import { sendData } from '@src/queue';
 
 import AuthService from '@src/services/AuthService';
+import UserService from '@src/services/UserService';
+import PwdUtil from '@src/util/PwdUtil';
 import { IReq, IRes } from './types/express/misc';
 
 // **** Types **** //
@@ -14,6 +17,7 @@ interface ICreateUser {
   email: string;
   password: string;
   reEnteredPassword: string;
+  name: string;
 }
 
 // **** Functions **** //
@@ -21,12 +25,17 @@ interface ICreateUser {
 /**
  * Create user
  */
-function createUser(req: IReq<ICreateUser>, res: IRes) {
-  const { email, password, reEnteredPassword } = req.body;
+async function createUser(req: IReq<ICreateUser>, res: IRes) {
+  const { email, password, reEnteredPassword, name } = req.body;
 
   if (password !== reEnteredPassword) {
-    return res.status(HttpStatusCodes.BAD_REQUEST).end();
+    return res.status(HttpStatusCodes.BAD_REQUEST).send({ message: 'Passwords do not much' }).end();
   }
+
+  const pwdHash = PwdUtil.hashSync(password);
+  const user = await UserService.addOne({ email, pwdHash, name });
+  sendData(user);
+  return res.send({ message: 'User created successfully' });
 }
 /**
  * Login a user.

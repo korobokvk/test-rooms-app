@@ -19,7 +19,7 @@ function getAll(): Promise<IUser[]> {
 /**
  * Add one user.
  */
-function addOne(user: IUser): Promise<void> {
+function addOne(user: IUser): Promise<IUser> {
   return UserRepo.add(user);
 }
 

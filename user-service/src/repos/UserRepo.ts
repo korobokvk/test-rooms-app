@@ -1,20 +1,18 @@
 import { IUser } from '@src/models/User';
-import { getRandomInt } from '@src/util/misc';
 import orm from './MockOrm';
+import { UserModel } from '../models';
+import logger from 'jet-logger';
+import { Model } from 'sequelize';
 
 // **** Functions **** //
 
 /**
  * Get one user.
  */
-async function getOne(email: string): Promise<IUser | null> {
-  const db = await orm.openDb();
-  for (const user of db.users) {
-    if (user.email === email) {
-      return user;
-    }
-  }
-  return null;
+async function getOne(email: string): Promise<IUser | void> {
+  const user: Model<IUser> | null = await UserModel.findOne({ where: { email } });
+  const dataObject = user?.dataValues;
+  return dataObject;
 }
 
 /**
@@ -41,11 +39,10 @@ async function getAll(): Promise<IUser[]> {
 /**
  * Add one user.
  */
-async function add(user: IUser): Promise<void> {
-  const db = await orm.openDb();
-  user.id = getRandomInt();
-  db.users.push(user);
-  return orm.saveDb(db);
+async function add(user: IUser): Promise<IUser> {
+  const newUser = UserModel.build({ ...user });
+  const savedUser: Model<IUser> | null = await newUser.save();
+  return savedUser.dataValues;
 }
 
 /**

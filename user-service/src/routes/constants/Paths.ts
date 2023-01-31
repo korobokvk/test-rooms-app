@@ -8,6 +8,7 @@ const Paths = {
   Base: '/api',
   Auth: {
     Base: '/auth',
+    Create: '/signup',
     Login: '/login',
     Logout: '/logout',
   },

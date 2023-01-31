@@ -6,7 +6,8 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import logger from 'jet-logger';
 import express, { Request, Response, NextFunction } from 'express';
-import amqp, { Connection, Channel } from 'amqplib';
+import jwt from 'jsonwebtoken';
+import fs from 'fs-extra';
 
 import 'express-async-errors';
 
@@ -18,6 +19,7 @@ import HttpStatusCodes from '@src/constants/HttpStatusCodes';
 
 import { NodeEnvs } from '@src/constants/misc';
 import { RouteError } from '@src/other/classes';
+import { connection } from './queue';
 
 // **** Variables **** //
 
@@ -62,17 +64,9 @@ app.use(
   }
 );
 
-// Connect to queue broker
-export const connection = async () => {
-  const connectionAddress = EnvVars.RabbitMqUrl;
-  const connection: Connection = await amqp.connect(connectionAddress);
-  const chanel: Channel = await connection.createChannel();
-  await chanel.assertQueue('UserChanel');
-
-  return chanel;
-};
-
 connection();
+
+// const privateKey = fs.readFileSync('./private.pem', 'utf8');
 
 // **** Export default **** //
 

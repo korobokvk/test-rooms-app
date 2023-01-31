@@ -9,6 +9,7 @@ export interface IUser {
   name: string;
   email: string;
   pwdHash?: string;
+  room?: number;
 }
 
 // **** Functions **** //
@@ -44,6 +45,10 @@ export const UserModel = (sequelize: Sequelize) => {
     pwdHash: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    room: {
+      type: DataTypes.NUMBER,
+      allowNull: true,
     },
   });
 };
