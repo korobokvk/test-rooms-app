@@ -1,74 +1,34 @@
 import { Router } from 'express';
 import jetValidator from 'jet-validator';
 
-import adminMw from './middleware/adminMw';
 import Paths from './constants/Paths';
-import User from '@src/models/User';
-import AuthRoutes from './AuthRoutes';
-import UserRoutes from './UserRoutes';
-
+import RoomRoutes from './RoomRoutes';
 
 // **** Variables **** //
 
 const apiRouter = Router(),
   validate = jetValidator();
 
+// ** Add RoomRouter ** //
 
-// **** Setup **** //
+const roomRouter = Router();
 
-const authRouter = Router();
+// Add user to room
+roomRouter.post(Paths.Room.ConnectToRoom, validate('email', ['id', 'number']), RoomRoutes.connectToRoom);
 
-// Login user
-authRouter.post(
-  Paths.Auth.Login,
-  validate('email', 'password'),
-  AuthRoutes.login,
-);
+// Add new room
+roomRouter.post(Paths.Room.Add, validate('name'), RoomRoutes.add);
 
-// Logout user
-authRouter.get(
-  Paths.Auth.Logout,
-  AuthRoutes.logout,
-);
+// Get room
+roomRouter.get(Paths.Room.Get, RoomRoutes.get);
 
-// Add AuthRouter
-apiRouter.use(Paths.Auth.Base, authRouter);
+// Delete room
+roomRouter.delete(Paths.Room.Delete, RoomRoutes.delete);
 
+// Get all room
+roomRouter.get(Paths.Room.GetAll, RoomRoutes.getAll);
 
-// ** Add UserRouter ** //
-
-const userRouter = Router();
-
-// Get all users
-userRouter.get(
-  Paths.Users.Get,
-  UserRoutes.getAll,
-);
-
-// Add one user
-userRouter.post(
-  Paths.Users.Add,
-  validate(['user', User.instanceOf]),
-  UserRoutes.add,
-);
-
-// Update one user
-userRouter.put(
-  Paths.Users.Update,
-  validate(['user', User.instanceOf]),
-  UserRoutes.update,
-);
-
-// Delete one user
-userRouter.delete(
-  Paths.Users.Delete,
-  validate(['id', 'number', 'params']),
-  UserRoutes.delete,
-);
-
-// Add UserRouter
-apiRouter.use(Paths.Users.Base, adminMw, userRouter);
-
+apiRouter.use(Paths.Room.Base, roomRouter);
 
 // **** Export default **** //
 

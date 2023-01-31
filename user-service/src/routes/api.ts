@@ -2,7 +2,6 @@ import { Router } from 'express';
 import jetValidator from 'jet-validator';
 
 import Paths from './constants/Paths';
-import User from '@src/models/User';
 import AuthRoutes from './AuthRoutes';
 import UserRoutes from './UserRoutes';
 
@@ -28,11 +27,16 @@ apiRouter.use(Paths.Auth.Base, authRouter);
 
 const userRouter = Router();
 
-// Update one user
-userRouter.put(Paths.Users.Update, validate(['user', User.instanceOf]), UserRoutes.update);
+// USER PRIVATE ROUTES
 
 // Get status
-apiRouter.use(Paths.Users.GetStatus, UserRoutes.getStatus);
+userRouter.post(Paths.Users.GetStatus, UserRoutes.getStatus);
+
+// Connect to room
+userRouter.post(Paths.Users.ConnectRoom, UserRoutes.connectToRoom);
+
+// Delete from room
+userRouter.post(Paths.Users.DeleteRoom, validate('email'), UserRoutes.deleteFromRoom);
 
 // Add UserRouter
 apiRouter.use(Paths.Users.Base, userRouter);

@@ -1,6 +1,5 @@
 import { TAll } from 'jet-validator';
-import { DataTypes } from 'sequelize';
-import { Sequelize } from 'sequelize';
+import { DataTypes, Sequelize } from 'sequelize';
 
 // **** Types **** //
 
@@ -51,6 +50,7 @@ export const UserModel = (sequelize: Sequelize) => {
     room: {
       type: DataTypes.NUMBER,
       allowNull: true,
+      defaultValue: null,
     },
   });
 };

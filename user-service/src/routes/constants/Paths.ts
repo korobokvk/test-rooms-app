@@ -15,6 +15,8 @@ const Paths = {
     Base: '/users',
     Update: '/update',
     GetStatus: '/get-status',
+    ConnectRoom: '/connect-room',
+    DeleteRoom: '/delete-room',
   },
 };
 

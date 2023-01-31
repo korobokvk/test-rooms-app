@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import fs from 'fs-extra';
+import path from 'path';
 
 // **** Variables **** //
 
@@ -32,15 +33,19 @@ function compare(pwd: string, hash: string): Promise<boolean> {
 /**
  * Decrypt data
  */
-function decryptData(data: NodeJS.ArrayBufferView) {
-  return crypto.privateDecrypt(
+function decryptData<T>(data: Buffer): T {
+  const keyPath = path.join(__dirname, '../../private_key.pem');
+  const bufferedData = crypto.privateDecrypt(
     {
-      key: fs.readFileSync('../private_key.pem', 'utf8'),
+      key: fs.readFileSync(keyPath, 'utf8'),
       padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
       oaepHash: 'sha256',
     },
-    data
+    Buffer.from(data)
   );
+  const parsedData = bufferedData.toString();
+  const dataObject = JSON.parse(parsedData) as T;
+  return dataObject;
 }
 // **** Export Default **** //
 

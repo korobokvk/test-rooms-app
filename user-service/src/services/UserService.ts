@@ -1,7 +1,5 @@
 import UserRepo from '@src/repos/UserRepo';
 import { IUser } from '@src/models/User';
-import { RouteError } from '@src/other/classes';
-import HttpStatusCodes from '@src/constants/HttpStatusCodes';
 
 // **** Variables **** //
 
@@ -19,20 +17,22 @@ function addOne(user: IUser): Promise<IUser> {
 /**
  * Update one user.
  */
-async function updateOne(user: IUser): Promise<void> {
-  const persists = await UserRepo.persists(2);
-  if (!persists) {
-    throw new RouteError(HttpStatusCodes.NOT_FOUND, USER_NOT_FOUND_ERR);
-  }
-  // Return user
-  return UserRepo.update(user);
+async function updateOne(userEmail: string, roomNumber: number | null): Promise<void> {
+  await UserRepo.update(userEmail, roomNumber);
 }
 
 /**
  * Get one
  */
-async function getOne(email: string): Promise<IUser | void> {
-  return UserRepo.getOne(email);
+async function getOne(email: string): Promise<IUser | string> {
+  return (await UserRepo.getOne(email)) || USER_NOT_FOUND_ERR;
+}
+
+/**
+ * Get user if available rooms
+ */
+async function getOneByAvailable(email: string): Promise<IUser | string> {
+  return (await UserRepo.getOneByAvailable(email)) || USER_NOT_FOUND_ERR;
 }
 // **** Export default **** //
 
@@ -40,4 +40,5 @@ export default {
   addOne,
   updateOne,
   getOne,
+  getOneByAvailable,
 } as const;

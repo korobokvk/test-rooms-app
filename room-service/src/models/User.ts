@@ -1,13 +1,5 @@
 import { TAll } from 'jet-validator';
-
-
-// **** Variables **** //
-
-export enum UserRoles {
-  Standard,
-  Admin,
-}
-
+import { Sequelize, DataTypes } from 'sequelize';
 
 // **** Types **** //
 
@@ -15,48 +7,19 @@ export interface IUser {
   id: number;
   name: string;
   email: string;
-  pwdHash?: string;
-  role?: UserRoles;
+  room?: number;
 }
-
-export interface ISessionUser {
-  id: number;
-  email: string;
-  name: string;
-  role: IUser['role'];
-}
-
 
 // **** Functions **** //
 
 /**
  * Get a new User object.
  */
-function new_(
-  name: string,
-  email: string,
-  role?: UserRoles,
-  pwdHash?: string,
-): IUser {
+function new_(name: string, email: string, id: number): IUser {
   return {
-    id: -1,
+    id,
     email,
     name,
-    role: (role ?? UserRoles.Standard),
-    pwdHash: (pwdHash ?? ''),
-  };
-}
-
-/**
- * Copy a user object.
- */
-function copy(user: IUser): IUser {
-  return {
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role,
-    pwdHash: user.pwdHash,
   };
 }
 
@@ -64,21 +27,28 @@ function copy(user: IUser): IUser {
  * See if an object is an instance of User.
  */
 function instanceOf(arg: TAll): boolean {
-  return (
-    !!arg &&
-    typeof arg === 'object' &&
-    'id' in arg &&
-    'email' in arg &&
-    'name' in arg &&
-    'role' in arg
-  );
+  return !!arg && typeof arg === 'object' && 'id' in arg && 'email' in arg && 'name' in arg && 'role' in arg;
 }
 
+const UserModel = (sequelize: Sequelize) => {
+  return sequelize.define('User', {
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  });
+};
 
 // **** Export default **** //
 
 export default {
   new: new_,
-  copy,
   instanceOf,
+  UserModel,
 } as const;

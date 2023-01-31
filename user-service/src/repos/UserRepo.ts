@@ -1,5 +1,4 @@
 import { IUser } from '@src/models/User';
-import orm from './MockOrm';
 import { UserModel } from '../models';
 import { Model } from 'sequelize';
 
@@ -15,24 +14,12 @@ async function getOne(email: string): Promise<IUser | void> {
 }
 
 /**
- * See if a user with the given id exists.
+ * Get one by available.
  */
-async function persists(id: number): Promise<boolean> {
-  const db = await orm.openDb();
-  for (const user of db.users) {
-    if (user.id === id) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * Get all users.
- */
-async function getAll(): Promise<IUser[]> {
-  const db = await orm.openDb();
-  return db.users;
+async function getOneByAvailable(email: string): Promise<IUser | void> {
+  const user: Model<IUser> | null = await UserModel.findOne({ where: { email, room: null } });
+  const dataObject = user?.dataValues;
+  return dataObject;
 }
 
 /**
@@ -47,36 +34,16 @@ async function add(user: IUser): Promise<IUser> {
 /**
  * Update a user.
  */
-async function update(user: IUser): Promise<void> {
-  const db = await orm.openDb();
-  for (let i = 0; i < db.users.length; i++) {
-    if (db.users[i].id === user.id) {
-      db.users[i] = user;
-      return orm.saveDb(db);
-    }
-  }
-}
-
-/**
- * Delete one user.
- */
-async function delete_(id: number): Promise<void> {
-  const db = await orm.openDb();
-  for (let i = 0; i < db.users.length; i++) {
-    if (db.users[i].id === id) {
-      db.users.splice(i, 1);
-      return orm.saveDb(db);
-    }
-  }
+async function update(userEmail: string, roomId: number | null): Promise<[affectedCount: number]> {
+  const newUser = UserModel.update({ room: roomId }, { where: { email: userEmail } });
+  return newUser;
 }
 
 // **** Export default **** //
 
 export default {
   getOne,
-  persists,
-  getAll,
   add,
   update,
-  delete: delete_,
+  getOneByAvailable,
 } as const;

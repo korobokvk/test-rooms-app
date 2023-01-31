@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt';
-
+import crypto from 'crypto';
+import fs from 'fs-extra';
 
 // **** Variables **** //
 
 const SALT_ROUNDS = 12;
-
 
 // **** Functions **** //
 
@@ -29,6 +29,19 @@ function compare(pwd: string, hash: string): Promise<boolean> {
   return bcrypt.compare(pwd, hash);
 }
 
+export function encryptText<T>(data: T): Buffer {
+  const dataString = JSON.stringify(data);
+  const hashedData = crypto.publicEncrypt(
+    {
+      key: fs.readFileSync('public_key.pem', 'utf8'),
+      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+      oaepHash: 'sha256',
+    },
+    Buffer.from(dataString)
+  );
+
+  return hashedData;
+}
 
 // **** Export Default **** //
 
