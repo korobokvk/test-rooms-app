@@ -20,9 +20,14 @@ npm run dev
 
 ## API
 
-user-service 
+### user-service 
 
-Sign up
+
+dev-env: 3000
+
+prod-env: 8081
+
+> Sign up
 
 POST `http://localhost:{env}/api/users/signup`
 ```
@@ -32,7 +37,7 @@ body: {
     reEnteredPassword: password
 }
 ```
-Login
+> Login
 
 POST `http://localhost:{env}/api/users/login`
 ```
@@ -41,9 +46,14 @@ body: {
     password: password
 }
 ```
-room-service
 
-Create room 
+### room-service
+
+dev-env: 3001
+
+prod-env: 8082
+
+> Create room 
 
 POST `http://localhost:{env}/api/rooms/`
 
@@ -53,19 +63,19 @@ body: {
 }
 ```
 
-Get one room info 
+> Get one room info 
 
 GET `http://localhost:{env}/api/rooms/{id}`
 
-Get all rooms info
+> Get all rooms info
 
 GET `http://localhost:{env}/api/rooms/`
 
-Delete room 
+> Delete room 
 
 DELETE `http://localhost:{env}/api/rooms/{id}`
 
-Connect user to room
+> Connect user to room
 
 POST `http://localhost:{env}/api/rooms/connect-to-room`
 
@@ -75,7 +85,7 @@ body: {
     id: 4
 }
 ```
-Remove user from room
+> Remove user from room
 
 POST `http://localhost:{env}/api/rooms/remove-room`
 
