@@ -13,7 +13,6 @@ const Paths = {
   },
   Users: {
     Base: '/users',
-    Update: '/update',
     GetStatus: '/get-status',
     ConnectRoom: '/connect-room',
     DeleteRoom: '/delete-room',

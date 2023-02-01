@@ -6,13 +6,13 @@ import { IUser } from '@src/models/User';
 let channel: Channel;
 export const connection = async () => {
   const connectionAddress = EnvVars.RabbitMqUrl;
-  const connection: Connection = await amqp.connect(connectionAddress);
+  const connection: Connection = await amqp.connect(connectionAddress, 'heartbeat=60');
   channel = await connection.createChannel();
-  await channel.assertQueue('UserChanel');
+  await channel.assertQueue(EnvVars.UserChannel);
 };
 
 export const sendData = (data: IUser) => {
   // send data to queue
   const { email, name, id } = data;
-  channel.sendToQueue('UserChanel', Buffer.from(JSON.stringify({ email, name, id })));
+  channel.sendToQueue(EnvVars.UserChannel, Buffer.from(JSON.stringify({ email, name, id })));
 };

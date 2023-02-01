@@ -1,4 +1,5 @@
 import HttpStatusCodes from '@src/constants/HttpStatusCodes';
+import { RouteError } from '@src/other/classes';
 import { sendData } from '@src/queue';
 
 import AuthService from '@src/services/AuthService';
@@ -20,6 +21,8 @@ interface ICreateUser {
   name: string;
 }
 
+const PASSWORD_NOT_MUCH = 'Passwords do not much';
+
 // **** Functions **** //
 
 /**
@@ -29,7 +32,7 @@ async function createUser(req: IReq<ICreateUser>, res: IRes) {
   const { email, password, reEnteredPassword, name } = req.body;
 
   if (password !== reEnteredPassword) {
-    return res.status(HttpStatusCodes.BAD_REQUEST).send({ message: 'Passwords do not much' }).end();
+    throw new RouteError(HttpStatusCodes.BAD_REQUEST, PASSWORD_NOT_MUCH);
   }
 
   const pwdHash = PwdUtil.hashSync(password);

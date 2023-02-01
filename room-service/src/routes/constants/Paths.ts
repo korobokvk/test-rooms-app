@@ -8,11 +8,12 @@ const Paths = {
   Base: '/api',
   Room: {
     Base: '/rooms',
-    GetAll: '/all',
-    Add: '/add',
+    GetAll: '/',
+    Add: '/',
     Get: '/:id',
     Delete: '/:id',
     ConnectToRoom: '/connect-to-room',
+    RemoveFromRoom: '/remove-room',
   },
 };
 

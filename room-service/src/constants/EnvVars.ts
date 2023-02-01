@@ -14,6 +14,7 @@ export default {
   DbHost: process.env.DB_HOST ?? 'localhost',
   DbPort: process.env.DB_PORT ?? '5433',
   RabbitMqUrl: process.env.RABBIT_URL ?? 'amqp://guest:guest@localhost:5672',
+  UserChannel: process.env.USER_CHANNEL ?? '',
   Jwt: {
     Secret: process.env.JWT_SECRET ?? '',
     Exp: process.env.COOKIE_EXP ?? '', // exp at the same time as the cookie

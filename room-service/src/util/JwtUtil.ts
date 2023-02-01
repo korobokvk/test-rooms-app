@@ -1,7 +1,6 @@
 import jsonwebtoken from 'jsonwebtoken';
 import EnvVars from '../constants/EnvVars';
 
-
 // **** Variables **** //
 
 // Errors
@@ -13,7 +12,6 @@ const Errors = {
 const Options = {
   expiresIn: EnvVars.Jwt.Exp,
 };
-
 
 // **** Functions **** //
 
@@ -31,18 +29,25 @@ function sign(data: string | object | Buffer): Promise<string> {
 /**
  * Decrypt JWT and extract client data.
  */
-function decode<T>(jwt: string): Promise<string | undefined | T> {
+function verify<T>(jwt: string): Promise<string | undefined | T> {
+  const parts = jwt.split(' ');
   return new Promise((res, rej) => {
-    jsonwebtoken.verify(jwt, EnvVars.Jwt.Secret, (err, decoded) => {
-      return err ? rej(Errors.Validation) : res(decoded as T);
-    });
+    if (parts.length === 2) {
+      const scheme = parts[0];
+      const credentials = parts[1];
+
+      if (/^Bearer$/i.test(scheme)) {
+        jsonwebtoken.verify(credentials, EnvVars.Jwt.Secret, (err, decoded) => {
+          return err ? rej(Errors.Validation) : res(decoded as T);
+        });
+      }
+    }
   });
 }
-
 
 // **** Export default **** //
 
 export default {
   sign,
-  decode,
+  verify,
 } as const;

@@ -53,9 +53,6 @@ app.use(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     next: NextFunction
   ) => {
-    if (EnvVars.NodeEnv !== NodeEnvs.Test) {
-      logger.err(err, true);
-    }
     let status = HttpStatusCodes.BAD_REQUEST;
     if (err instanceof RouteError) {
       status = err.status;

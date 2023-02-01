@@ -1,6 +1,5 @@
 import HttpStatusCodes from '@src/constants/HttpStatusCodes';
-import logger from 'jet-logger';
-import RoomService, { USER_ALREADY_CONNECTED } from '@src/services/RoomService';
+import RoomService from '@src/services/RoomService';
 import { IRoom } from '@src/models/Room';
 import { IReq, IRes } from './types/express/misc';
 
@@ -30,11 +29,7 @@ async function _get(req: IReq, res: IRes) {
   const id = req.params.id;
   const room = await RoomService.getOne(Number(id));
 
-  if (room) {
-    return res.status(HttpStatusCodes.OK).send(room).end();
-  }
-
-  return res.status(HttpStatusCodes.NOT_FOUND).send(room).end();
+  return res.status(HttpStatusCodes.OK).send(room).end();
 }
 
 /**
@@ -53,9 +48,17 @@ async function connectToRoom(req: IReq<{ email: string; id: number }>, res: IRes
   const { email, id } = req.body;
   const response = await RoomService.connectUserToRoom({ email, id });
 
-  const code = response?.message ? HttpStatusCodes.OK : HttpStatusCodes.BAD_REQUEST;
+  return res.status(HttpStatusCodes.OK).send(response).end();
+}
 
-  return res.status(code).send(response).end();
+/**
+ * Remove user from room
+ */
+async function removeRoom(req: IReq<{ email: string }>, res: IRes) {
+  const { email } = req.body;
+  const response = await RoomService.removeUserFromRoom(email);
+
+  return res.status(HttpStatusCodes.OK).send(response).end();
 }
 
 // **** Export default **** //
@@ -65,5 +68,6 @@ export default {
   getAll,
   delete: _delete,
   connectToRoom,
+  removeRoom,
   get: _get,
 } as const;

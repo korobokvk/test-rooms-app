@@ -11,14 +11,6 @@ async function addOne(user: IUser): Promise<IUser> {
   return newUser;
 }
 
-/**
- * Get one user
- */
-async function getOne(email: string) {
-  const user = await UserRepo.getOne(email);
-  return user;
-}
-
 // **** Export default **** //
 
 export default {

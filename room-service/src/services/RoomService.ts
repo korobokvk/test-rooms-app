@@ -6,6 +6,8 @@ import { IRoom } from '@src/models/Room';
 import { encryptText } from '@src/util/PwdUtil';
 import EnvVars from '@src/constants/EnvVars';
 import { IUser } from '@src/models/User';
+import { RouteError } from '@src/other/classes';
+import HttpStatusCodes from '@src/constants/HttpStatusCodes';
 
 // **** Variables **** //
 
@@ -25,8 +27,12 @@ async function addOne(room: IRoom): Promise<IRoom | void> {
 /**
  * Get one
  */
-async function getOne(id: number): Promise<IRoom | { message: string }> {
-  return (await RoomRepo.getOne(id)) || { message: ROOM_NOT_FOUND_ERR };
+async function getOne(id: number): Promise<IRoom> {
+  const room = await RoomRepo.getOne(id);
+  if (!room) {
+    throw new RouteError(HttpStatusCodes.NOT_FOUND, ROOM_NOT_FOUND_ERR);
+  }
+  return room;
 }
 
 /**
@@ -57,10 +63,25 @@ async function connectUserToRoom({ email, id }: { email: string; id: number }) {
   const room = await getUserStatus(userExist);
 
   if (room) {
-    return { message: USER_ALREADY_CONNECTED };
+    throw new RouteError(HttpStatusCodes.BAD_REQUEST, USER_ALREADY_CONNECTED);
   }
 
   const connectResponse = await sendConnectionRequest(userExist.email, id);
+
+  return connectResponse;
+}
+
+/**
+ * Remove user from room
+ */
+async function removeUserFromRoom(email: string) {
+  const userExist = await UserRepo.getOne(email);
+
+  if (!userExist) {
+    return null;
+  }
+
+  const connectResponse = await sendRemoveFromRoomRequest(userExist.email);
 
   return connectResponse;
 }
@@ -79,7 +100,7 @@ async function getUserStatus(user: IUser) {
   const result = await axios<IUser>(axiosConfig);
 
   if (result.data.room) {
-    return USER_ALREADY_CONNECTED;
+    throw new RouteError(HttpStatusCodes.BAD_REQUEST, USER_ALREADY_CONNECTED);
   }
 
   return result.data.room;
@@ -101,6 +122,24 @@ async function sendConnectionRequest(email: string, roomId: number) {
 
   return result.data;
 }
+
+/**
+ * Send request to remove user from room
+ */
+async function sendRemoveFromRoomRequest(email: string) {
+  const axiosConfig = {
+    method: 'POST',
+    data: {
+      data: encryptText(email),
+    },
+    url: `${EnvVars.UserServiceUrl}/api/users/delete-room`,
+  };
+
+  const result = await axios<{ message: string }>(axiosConfig);
+
+  return result.data;
+}
+
 // **** Export default **** //
 
 export default {
@@ -109,4 +148,5 @@ export default {
   getAll,
   delete: _delete,
   connectUserToRoom,
+  removeUserFromRoom,
 } as const;

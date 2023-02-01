@@ -1,19 +1,17 @@
 FROM node:16-alpine as builder
-WORKDIR /app
+WORKDIR /usr/src/app
 COPY package*.json ./
-COPY . .
-
 RUN npm install
+COPY . .
 RUN npm run build
 
-
-FROM node:16-alpine as runtime
-
-WORKDIR /app
+FROM node:16-alpine
+WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm ci -only=production
-COPY --from=0 /app/dist ./dist
-COPY --from=0 /app/env* ./env
+RUN npm i -only=production
+COPY --from=builder /usr/src/app/private_key.pem ./
+COPY --from=builder /usr/src/app/dist/ ./dist
+COPY --from=builder /usr/src/app/env ./env
 
 EXPOSE 8081
 

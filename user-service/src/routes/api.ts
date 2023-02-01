@@ -30,13 +30,13 @@ const userRouter = Router();
 // USER PRIVATE ROUTES
 
 // Get status
-userRouter.post(Paths.Users.GetStatus, UserRoutes.getStatus);
+userRouter.post(Paths.Users.GetStatus, validate('data'), UserRoutes.getStatus);
 
 // Connect to room
-userRouter.post(Paths.Users.ConnectRoom, UserRoutes.connectToRoom);
+userRouter.post(Paths.Users.ConnectRoom, validate('data'), UserRoutes.connectToRoom);
 
 // Delete from room
-userRouter.post(Paths.Users.DeleteRoom, validate('email'), UserRoutes.deleteFromRoom);
+userRouter.post(Paths.Users.DeleteRoom, validate('data'), UserRoutes.deleteFromRoom);
 
 // Add UserRouter
 apiRouter.use(Paths.Users.Base, userRouter);
